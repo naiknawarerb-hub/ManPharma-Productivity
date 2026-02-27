@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="ManPharma" />
+  <title>ManPharma Offline Dashboard</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="phone-shell">
+    <header class="topbar">
+      <div class="brand-stack">
+        <div class="brand-logo-box large">
+          <img id="brandLogo" class="brand-logo hidden" alt="Brand logo" />
+          <span id="brandLogoFallback" class="brand-logo-fallback">MP</span>
+        </div>
+        <div class="brand-texts centered">
+          <h1 id="brandTitle">ManPharma Tutorials</h1>
+          <p id="brandTagline">In the process of building a 1000 crore EdTech brand</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="notifyButton" class="icon-btn" title="Due Notifications" aria-label="Due Notifications">🔔 <span id="notifyCount" class="badge hidden">0</span></button>
+        <button id="brandingButton" class="icon-btn" title="Branding Settings" aria-label="Branding Settings" data-open="brandingModal">⚙️</button>
+      </div>
+      <div class="search-wrap">
+        <input id="globalSearchInput" type="search" placeholder="Search tasks, ideas, content, revenue..." />
+        <span class="search-icon">🔍</span>
+      </div>
+    </header>
+
+    <main class="content" id="dashboardView">
+      <section class="hero">
+        <h2>Dashboard Overview</h2>
+        <p>Your content operations at a glance</p>
+      </section>
+      <section class="card-inline">
+        <label for="dashboardDatePicker">Active Date</label>
+        <input id="dashboardDatePicker" type="date" />
+      </section>
+      <section>
+        <h3>Schedule For Selected Date</h3>
+        <div id="dashboardDayList" class="list"></div>
+      </section>
+      <section>
+        <div class="week-zone">
+          <div class="week-zone-head">
+            <h3>Next 7 Days</h3>
+          </div>
+          <div id="dashboardWeekList" class="list week-scroll"></div>
+        </div>
+      </section>
+      <section>
+        <h3>Quick Actions</h3>
+        <div class="action-grid">
+          <button class="action-btn btn-purple" data-open="taskModal">Add Task</button>
+          <button class="action-btn btn-blue" data-open="postModal">Schedule Post</button>
+          <button class="action-btn btn-green" data-open="revenueModal">Add Revenue</button>
+          <button class="action-btn btn-orange" data-open="ideaModal">Add Idea</button>
+          <button class="action-btn btn-violet" data-open="videoModal">New Video</button>
+        </div>
+      </section>
+    </main>
+
+    <main class="content hidden" id="contentView">
+      <section class="hero"><h2>Content</h2><p>Manage scheduled posts and videos</p></section>
+      <button class="wide-cta" data-open="postModal">Schedule New Post</button>
+      <button class="wide-cta" data-open="videoModal">Add New Video</button>
+      <h3>Posts</h3>
+      <div id="postsList" class="list"></div>
+      <h3>Videos</h3>
+      <div id="videosList" class="list"></div>
+    </main>
+
+    <main class="content hidden" id="ideasView">
+      <section class="hero"><h2>Ideas</h2><p>Capture content and research ideas</p></section>
+      <button class="wide-cta" data-open="ideaModal">New Idea</button>
+      <div id="ideasList" class="list"></div>
+    </main>
+
+    <main class="content hidden" id="tasksView">
+      <section class="hero"><h2>Tasks</h2><p>Track priorities and due dates</p></section>
+      <button class="wide-cta" data-open="taskModal">Create Task</button>
+      <div id="tasksList" class="list"></div>
+    </main>
+
+    <main class="content hidden" id="revenueView">
+      <section class="hero"><h2>Revenue</h2><p>Track income entries and summaries</p></section>
+      <button class="wide-cta" data-open="revenueModal">Add Revenue Entry</button>
+      <div class="stats-grid one-col">
+        <article class="stat-box">
+          <small>Revenue Distribution</small>
+          <canvas id="revenuePieChart" class="chart-canvas" width="320" height="220"></canvas>
+        </article>
+      </div>
+      <div id="revenueModuleList" class="list"></div>
+    </main>
+
+    <main class="content hidden" id="analyticsView">
+      <section class="hero"><h2>Analytics</h2><p>Productivity and revenue insights</p></section>
+      <section>
+        <h3>Productivity Analytics</h3>
+        <div class="range-filter" data-range-group="prodRange">
+          <button type="button" class="range-btn" data-range="1d">1 Day</button>
+          <button type="button" class="range-btn active" data-range="7d">7 Days</button>
+          <button type="button" class="range-btn" data-range="3m">3 Months</button>
+          <button type="button" class="range-btn" data-range="6m">6 Months</button>
+        </div>
+        <div class="metric-stack">
+          <article class="metric-stat-card metric-prod-scheduled"><small>Tasks Scheduled</small><strong id="prodScheduledMetric">0</strong></article>
+          <article class="metric-stat-card metric-prod-completed"><small>Tasks Completed</small><strong id="prodCompletedMetric">0</strong></article>
+          <article class="metric-stat-card metric-prod-rescheduled"><small>Tasks Rescheduled</small><strong id="prodRescheduledMetric">0</strong></article>
+          <article class="metric-stat-card metric-prod-pending"><small>Tasks Pending</small><strong id="prodPendingMetric">0</strong></article>
+        </div>
+      </section>
+      <section>
+        <h3>Revenue Analytics</h3>
+        <div class="range-filter" data-range-group="revRange">
+          <button type="button" class="range-btn" data-range="1d">1 Day</button>
+          <button type="button" class="range-btn active" data-range="7d">7 Days</button>
+          <button type="button" class="range-btn" data-range="3m">3 Months</button>
+          <button type="button" class="range-btn" data-range="6m">6 Months</button>
+        </div>
+        <div class="metric-stack">
+          <article class="metric-stat-card metric-rev-added"><small>Revenue Added</small><strong id="revAddedMetric">₹0</strong></article>
+          <article class="metric-stat-card metric-rev-received"><small>Revenue Received</small><strong id="revReceivedMetric">₹0</strong></article>
+          <article class="metric-stat-card metric-rev-pending"><small>Revenue Pending</small><strong id="revPendingMetric">₹0</strong></article>
+          <article class="metric-stat-card metric-rev-monthly"><small>Monthly Total</small><strong id="revMonthlyMetric">₹0</strong></article>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-view="dashboardView"><span>📊</span><span>Dashboard</span></button>
+      <button class="nav-btn" data-view="contentView"><span>🎬</span><span>Content</span></button>
+      <button class="nav-btn" data-view="ideasView"><span>💡</span><span>Ideas</span></button>
+      <button class="nav-btn" data-view="tasksView"><span>✅</span><span>Tasks</span></button>
+      <button class="nav-btn" data-view="revenueView"><span>₹</span><span>Revenue</span></button>
+      <button class="nav-btn" data-view="analyticsView"><span>📊</span><span>Analytics</span></button>
+    </nav>
+  </div>
+
+  <div id="overlay" class="overlay hidden"></div>
+
+  <section id="taskModal" class="modal hidden">
+    <header><h2>New Task</h2><button data-close>✕</button></header>
+    <form id="taskForm">
+      <input type="hidden" name="editId" />
+      <input name="title" required placeholder="Task Title *" />
+      <textarea name="desc" placeholder="Description (optional)"></textarea>
+      <label>Priority</label>
+      <div class="chips priority-chips" data-chip-group="taskPriority">
+        <button type="button" class="chip priority-low" data-value="low">Low</button>
+        <button type="button" class="chip priority-medium active" data-value="medium">Medium</button>
+        <button type="button" class="chip priority-high" data-value="high">High</button>
+      </div>
+      <label>Category</label>
+      <div id="taskFormCategoryChips" class="chips" data-chip-group="taskCategory"></div>
+      <div class="inline-actions">
+        <input id="newTaskCategoryInput" type="text" placeholder="Add category" />
+        <button id="addTaskCategoryBtn" class="submit-btn secondary-btn" type="button">+ Add</button>
+      </div>
+      <label>Due Date & Time</label>
+      <input type="datetime-local" name="dueDate" required />
+      <label>Attachment (optional)</label>
+      <input type="file" name="attachment" accept="image/*,.pdf,.doc,.docx,.txt" />
+      <button class="submit-btn" type="submit">Save Task</button>
+    </form>
+  </section>
+
+  <section id="postModal" class="modal hidden">
+    <header><h2>Schedule Post</h2><button data-close>✕</button></header>
+    <form id="postForm">
+      <input type="hidden" name="editId" />
+      <input name="title" required placeholder="Title *" />
+      <label>Content Type</label>
+      <div class="chips" data-chip-group="postType">
+        <button type="button" class="chip active" data-value="video">Video</button>
+        <button type="button" class="chip" data-value="post">Post</button>
+        <button type="button" class="chip" data-value="story">Story</button>
+        <button type="button" class="chip" data-value="reel">Reel</button>
+      </div>
+      <label>Status</label>
+      <div class="chips" data-chip-group="postStatus">
+        <button type="button" class="chip" data-value="draft">Draft</button>
+        <button type="button" class="chip active" data-value="scheduled">Scheduled</button>
+        <button type="button" class="chip" data-value="posted">Posted</button>
+      </div>
+      <label>Platform</label>
+      <div class="chips" data-chip-group="platform">
+        <button type="button" class="chip active" data-value="youtube">YouTube</button>
+        <button type="button" class="chip" data-value="instagram">Instagram</button>
+        <button type="button" class="chip" data-value="facebook">Facebook</button>
+        <button type="button" class="chip" data-value="linkedin">LinkedIn</button>
+      </div>
+      <label>Priority</label>
+      <div class="chips priority-chips" data-chip-group="postPriority">
+        <button type="button" class="chip priority-low" data-value="low">Low</button>
+        <button type="button" class="chip priority-medium active" data-value="medium">Medium</button>
+        <button type="button" class="chip priority-high" data-value="high">High</button>
+      </div>
+      <label>Scheduled Date & Time</label>
+      <input type="datetime-local" name="date" required />
+      <label>Attachment (optional)</label>
+      <input type="file" name="attachment" accept="image/*,.pdf,.doc,.docx,.txt" />
+      <button class="submit-btn" type="submit">Save Post</button>
+    </form>
+  </section>
+
+  <section id="ideaModal" class="modal hidden">
+    <header><h2>New Idea</h2><button data-close>✕</button></header>
+    <form id="ideaForm">
+      <input type="hidden" name="editId" />
+      <input name="title" required placeholder="Idea Title *" />
+      <textarea name="description" placeholder="Description"></textarea>
+      <label>Category</label>
+      <div id="ideaCategoryChips" class="chips" data-chip-group="ideaCategory">
+        <button type="button" class="chip active" data-value="pharmacology">Pharmacology</button>
+      </div>
+      <div class="inline-actions">
+        <input id="newIdeaCategoryInput" type="text" placeholder="Add custom category" />
+        <button type="button" id="addIdeaCategoryBtn" class="submit-btn secondary-btn">Add</button>
+      </div>
+      <p class="meta-line">Tip: Tap ✕ beside custom category to delete it.</p>
+      <label>Priority</label>
+      <div class="chips priority-chips" data-chip-group="ideaPriority">
+        <button type="button" class="chip priority-low" data-value="low">Low</button>
+        <button type="button" class="chip priority-medium active" data-value="medium">Medium</button>
+        <button type="button" class="chip priority-high" data-value="high">High</button>
+      </div>
+      <label>Attachment (optional)</label>
+      <input type="file" name="attachment" accept="image/*,.pdf,.doc,.docx,.txt" />
+      <label>Date (optional)</label>
+      <input type="date" name="ideaDate" />
+      <button class="submit-btn" type="submit">Save Idea</button>
+    </form>
+  </section>
+
+  <section id="revenueModal" class="modal hidden">
+    <header><h2>Add Revenue</h2><button data-close>✕</button></header>
+    <form id="revenueForm">
+      <input type="hidden" name="editId" />
+      <input name="title" placeholder="Title / Source label" />
+      <label>Income Source</label>
+      <select name="source" required>
+        <option value="YouTube">YouTube</option>
+        <option value="Course Sales">Course Sales</option>
+        <option value="Sponsorship">Sponsorship</option>
+        <option value="Affiliate">Affiliate</option>
+        <option value="Other">Other</option>
+      </select>
+      <input name="category" placeholder="Category (manual)" />
+      <input type="number" name="amount" min="0" step="1" required placeholder="Amount (INR)" />
+      <label>Date</label>
+      <input type="date" name="date" />
+      <textarea name="notes" placeholder="Notes/comments"></textarea>
+      <label>Payment Status</label>
+      <select name="paymentStatus">
+        <option value="received">Received</option>
+        <option value="pending">Pending</option>
+      </select>
+      <button class="submit-btn" type="submit">Save Revenue</button>
+    </form>
+  </section>
+
+  <section id="videoModal" class="modal hidden">
+    <header><h2>New Video</h2><button data-close>✕</button></header>
+    <form id="videoForm">
+      <input type="hidden" name="editId" />
+      <input name="title" required placeholder="Video title" />
+      <label>Status</label>
+      <div class="chips" data-chip-group="videoStatus">
+        <button type="button" class="chip active" data-value="in-progress">In Progress</button>
+        <button type="button" class="chip" data-value="editing">Editing</button>
+        <button type="button" class="chip" data-value="done">Done</button>
+      </div>
+      <label>Priority</label>
+      <div class="chips priority-chips" data-chip-group="videoPriority">
+        <button type="button" class="chip priority-low" data-value="low">Low</button>
+        <button type="button" class="chip priority-medium active" data-value="medium">Medium</button>
+        <button type="button" class="chip priority-high" data-value="high">High</button>
+      </div>
+      <label>Attachment (optional)</label>
+      <input type="file" name="attachment" accept="image/*,.pdf,.doc,.docx,.txt" />
+      <button class="submit-btn" type="submit">Save Video</button>
+    </form>
+  </section>
+
+  <section id="brandingModal" class="modal hidden">
+    <header><h2>Branding Settings</h2><button data-close>✕</button></header>
+    <form id="brandingForm">
+      <label for="brandingTitleInput">Brand Title</label>
+      <input id="brandingTitleInput" name="brandTitle" maxlength="50" required />
+      <label for="brandingTaglineInput">Tagline</label>
+      <input id="brandingTaglineInput" name="brandTagline" maxlength="120" required />
+      <label>Logo (JPG, PNG, SVG)</label>
+      <input id="logoInput" type="file" accept=".jpg,.jpeg,.png,.svg,image/jpeg,image/png,image/svg+xml" />
+      <div class="branding-preview">
+        <img id="brandingLogoPreview" class="branding-logo-preview hidden" alt="Current logo preview" />
+        <span id="brandingLogoPreviewFallback" class="brand-logo-fallback">MP</span>
+      </div>
+      <label><input id="logoCircleToggle" type="checkbox" checked /> Circular crop logo</label>
+      <label for="logoPosX">Adjust Logo Position X</label>
+      <input id="logoPosX" type="range" min="0" max="100" value="50" />
+      <label for="logoPosY">Adjust Logo Position Y</label>
+      <input id="logoPosY" type="range" min="0" max="100" value="50" />
+      <div class="inline-actions">
+        <button type="button" id="replaceLogoBtn" class="submit-btn secondary-btn">Replace Logo</button>
+        <button type="button" id="removeLogoBtn" class="submit-btn danger-btn">Remove Logo</button>
+      </div>
+      <div class="inline-actions">
+        <button type="button" id="exportDataBtn" class="submit-btn secondary-btn">Export Backup</button>
+        <button type="button" id="importDataBtn" class="submit-btn secondary-btn">Import Backup</button>
+      </div>
+      <input id="importDataInput" type="file" accept="application/json" class="hidden" />
+      <button class="submit-btn" type="submit">Save Branding</button>
+    </form>
+  </section>
+
+  <section id="filePreviewModal" class="modal hidden">
+    <header><h2>Attachment Preview</h2><button data-close>✕</button></header>
+    <div id="filePreviewContent" class="file-preview-content"></div>
+  </section>
+
+  <section id="bellModal" class="modal hidden">
+    <header><h2>Due & Overdue Tasks</h2><button data-close>✕</button></header>
+    <div id="bellDueList" class="list"></div>
+  </section>
+
+  <section id="rescheduleModal" class="modal hidden">
+    <header><h2>Reschedule Task</h2><button data-close>✕</button></header>
+    <form id="rescheduleForm">
+      <input type="hidden" name="taskId" />
+      <label>New Due Date & Time</label>
+      <input type="datetime-local" name="dueDate" required />
+      <button class="submit-btn" type="submit">Save Reschedule</button>
+    </form>
+  </section>
+
+  <script src="./storage.js"></script>
+  <script src="./ui.js"></script>
+  <script src="./main.js"></script>
+</body>
+</html>
