@@ -1,0 +1,18 @@
+{
+  "name": "ManPharma Tutorials",
+  "short_name": "ManPharma",
+  "display": "standalone",
+  "start_url": "./",
+  "scope": "./",
+  "background_color": "#e2e2e5",
+  "theme_color": "#5f00d5",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icons/logo.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
