@@ -3,14 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="theme-color" content="#5f00d5" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="ManPharma" />
   <title>ManPharma Offline Dashboard</title>
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" type="image/png" href="./icons/icon-192.png" />
-  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+  <link rel="icon" sizes="192x192" href="./icons/icon-192.png" />
+  <link rel="icon" sizes="512x512" href="./icons/icon-512.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
@@ -175,7 +178,7 @@
       </section>
     </main>
 
-    <nav class="bottom-nav">
+    <nav class="bottom-nav mobile-chrome">
       <button class="nav-btn active" data-view="dashboardView"><span>📊</span><span>Dashboard</span></button>
       <button class="nav-btn" data-view="contentView"><span>🎬</span><span>Content</span></button>
       <button class="nav-btn" data-view="ideasView"><span>💡</span><span>Ideas</span></button>
@@ -183,7 +186,7 @@
       <button class="nav-btn" data-view="revenueView"><span>₹</span><span>Revenue</span></button>
       <button class="nav-btn" data-view="analyticsView"><span>📊</span><span>Analytics</span></button>
     </nav>
-    <button id="quickCaptureBtn" class="quick-capture-btn" type="button" aria-label="Quick Add" data-open="quickAddModal">+</button>
+    <button id="quickCaptureBtn" class="quick-capture-btn mobile-chrome" type="button" aria-label="Quick Add" data-open="quickAddModal">+</button>
   </div>
 
   <div id="overlay" class="overlay hidden"></div>
